@@ -10,7 +10,10 @@ def menu():
          print("3. Search Employee")
          print("4. Update Employee Salary")
          print("5. Delete Employee")
-         print("6. Exit")
+         print("6. Export Employees to CSV")
+         print("7. serach by department")
+         print("8. sort employee by salary")
+         print("9. Exit")
 
          choice = input("Enter your choice: ")
 
@@ -30,9 +33,18 @@ def menu():
              delete_employee()
 
          elif choice == "6":
-             print("Exiting program...")
+             export_to_csv()
+        
+         elif choice == "7":
+            search_by_department()
+
+         elif choice =="8":
+             sort_employees_by_salary()
+            
+         elif choice == "9":
+            print("Exiting program...")
              
-             break 
+            break 
 
          else:
              print("Invalid choice")
