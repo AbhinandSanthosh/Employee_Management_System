@@ -1,52 +1,33 @@
-from services.employee_services import *
+import streamlit as st
 
-def menu():
+from components.sidebar import sidebar_menu
 
-    while True:
-         print("\n===== Employee Mnagement System =====")
+from pages.dashboard import show_dashboard
+from pages.add_employee import show_add_employee
 
-         print("1. Add Employee")
-         print("2. View Employees")
-         print("3. Search Employee")
-         print("4. Update Employee Salary")
-         print("5. Delete Employee")
-         print("6. Export Employees to CSV")
-         print("7. serach by department")
-         print("8. sort employee by salary")
-         print("9. Exit")
 
-         choice = input("Enter your choice: ")
+st.set_page_config(
+    page_title="Employee Management System",
+    page_icon="💼",
+    layout="wide"
+)
 
-         if choice == "1":
-              add_employee()
 
-         elif choice == "2":
-              view_employees()
+with open("frontend/styles/custom.css") as f:
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
 
-         elif choice =="3":
-             search_employee()
 
-         elif choice == "4":
-             update_employee_salary()
+menu = sidebar_menu()
 
-         elif choice == "5":
-             delete_employee()
 
-         elif choice == "6":
-             export_to_csv()
-        
-         elif choice == "7":
-            search_by_department()
+if menu == "Dashboard":
 
-         elif choice =="8":
-             sort_employees_by_salary()
-            
-         elif choice == "9":
-            print("Exiting program...")
-             
-            break 
+    show_dashboard()
 
-         else:
-             print("Invalid choice")
 
-menu()
+elif menu == "Add Employee":
+
+    show_add_employee()

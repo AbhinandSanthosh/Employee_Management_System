@@ -1,261 +1,64 @@
 import streamlit as st
-from db import get_connection
-import pandas as pd
 
-st.title("Employee Management System")
-menu = [
-    "Add Employee",
-    "View Employees",
-    "Search Employee",
-    "Update Salary",
-    "Delete Employee",
-    "Sort Employees",
-    "Export CSV"
-]
-choice = st.sidebar.selectbox("Menu", menu)
+from components.sidebar import sidebar_menu
 
-if choice == "Add Employee":
-    st.subheader("Add New Employee")
-
-elif choice == "View Employees":
-
-    st.subheader("All Employees")
-
-    try:
-
-        connection = get_connection()
-
-        query = "SELECT * FROM employees"
-
-        df = pd.read_sql(query, connection)
-
-        st.dataframe(df)
-
-    except Exception as e:
-
-        st.error(f"Error: {e}")
-
-    finally:
-
-        connection.close()
+from views.dashboard import show_dashboard
+from views.add_employee import show_add_employee
+from views.view_employees import show_view_employees
+from views.search_employee import show_search_employee
+from views.update_salary import show_update_salary
+from views.delete_employee import show_delete_employee
+from views.sort_employees import show_sort_employees
 
 
-elif choice == "Search Employee":
+st.set_page_config(
+    page_title="Employee Management System",
+    page_icon="💼",
+    layout="wide"
+)
 
-    st.subheader("Search Employee")
 
-    employee_id = st.number_input(
-        "Enter Employee ID",
-        min_value=1,
-        step=1
+with open("frontend/styles/custom.css") as f:
+
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
     )
 
-    if st.button("Search"):
 
-        try:
+menu = sidebar_menu()
 
-            connection = get_connection()
 
-            cursor = connection.cursor()
+if menu == "Dashboard":
 
-            query = """
-            SELECT * FROM employees
-            WHERE id = %s
-            """
+    show_dashboard()
 
-            cursor.execute(query, (employee_id,))
 
-            employee = cursor.fetchone()
+elif menu == "Add Employee":
 
-            if employee:
+    show_add_employee()
 
-                st.success("Employee Found")
 
-                st.write(f"ID: {employee[0]}")
-                st.write(f"Name: {employee[1]}")
-                st.write(f"Department: {employee[2]}")
-                st.write(f"Salary: {employee[3]}")
-                st.write(f"Email: {employee[4]}")
+elif menu == "View Employees":
 
-            else:
+    show_view_employees()
 
-                st.warning("Employee not found")
 
-        except Exception as e:
+elif menu == "Search Employee":
 
-            st.error(f"Error: {e}")
+    show_search_employee()
 
-        finally:
 
-            cursor.close()
+elif menu == "Update Salary":
 
-            connection.close()
+    show_update_salary()
 
-elif choice == "Update Salary":
 
-    st.subheader("Update Employee Salary")
+elif menu == "Delete Employee":
 
-    employee_id = st.number_input(
-        "Employee ID",
-        min_value=1,
-        step=1
-    )
+    show_delete_employee()
 
-    new_salary = st.number_input(
-        "New Salary",
-        min_value=0.0
-    )
 
-    if st.button("Update Salary"):
+elif menu == "Sort Employees":
 
-        try:
-
-            connection = get_connection()
-
-            cursor = connection.cursor()
-
-            query = """
-            UPDATE employees
-            SET salary = %s
-            WHERE id = %s
-            """
-
-            cursor.execute(query, (new_salary, employee_id))
-
-            connection.commit()
-
-            if cursor.rowcount > 0:
-
-                st.success("Salary updated successfully")
-
-            else:
-
-                st.warning("Employee not found")
-
-        except Exception as e:
-
-            st.error(f"Error: {e}")
-
-        finally:
-
-            cursor.close()
-
-            connection.close()
-
-elif choice == "Delete Employee":
-
-    st.subheader("Delete Employee")
-
-    employee_id = st.number_input(
-        "Employee ID to Delete",
-        min_value=1,
-        step=1
-    )
-
-    if st.button("Delete Employee"):
-
-        try:
-
-            connection = get_connection()
-
-            cursor = connection.cursor()
-
-            query = """
-            DELETE FROM employees
-            WHERE id = %s
-            """
-
-            cursor.execute(query, (employee_id,))
-
-            connection.commit()
-
-            if cursor.rowcount > 0:
-
-                st.success("Employee deleted successfully")
-
-            else:
-
-                st.warning("Employee not found")
-
-        except Exception as e:
-
-            st.error(f"Error: {e}")
-
-        finally:
-
-            cursor.close()
-
-            connection.close()
-
-elif choice == "Sort Employees":
-
-    st.subheader("Sort Employees By Salary")
-
-    sort_order = st.radio(
-        "Select Order",
-        ["Ascending", "Descending"]
-    )
-
-    try:
-
-        connection = get_connection()
-
-        if sort_order == "Ascending":
-
-            query = """
-            SELECT * FROM employees
-            ORDER BY salary ASC
-            """
-
-        else:
-
-            query = """
-            SELECT * FROM employees
-            ORDER BY salary DESC
-            """
-
-        df = pd.read_sql(query, connection)
-
-        st.dataframe(df)
-
-    except Exception as e:
-
-        st.error(f"Error: {e}")
-
-    finally:
-
-        connection.close()
-
-    name = st.text_input("Employee Name")
-
-    department = st.text_input("Department")
-
-    salary = st.number_input("Salary", min_value=0.0)
-
-    email = st.text_input("Email")
-
-    if st.button("Add Employee"):
-        try:
-            connection = get_connection()
-            cursor = connection.cursor()
-
-            query = """
-            INSERT INTO employees
-            (employee_name, department, salary, email)
-
-            VALUES (%s, %s, %s, %s)
-            """          
-            values = (name, department, salary, email) 
-            cursor.execute(query, values)
-
-            connection.commit()
-
-            st.success("Employee added successfully")
-
-        except Exception as e:
-            st.error(f"error: {e}")
-
-        finally:
-            cursor.close()
-
-            connection.close()
+    show_sort_employees()
