@@ -1,6 +1,5 @@
 import streamlit as st
-
-from db import get_connection
+import requests
 
 
 def show_update_salary():
@@ -22,39 +21,27 @@ def show_update_salary():
 
         try:
 
-            connection = get_connection()
+            response = requests.put(
 
-            cursor = connection.cursor()
+                f"http://127.0.0.1:8000/employees/{employee_id}",
 
-            query = """
-            UPDATE employees
-            SET salary = %s
-            WHERE id = %s
-            """
-
-            cursor.execute(
-                query,
-                (new_salary, employee_id)
+                params={
+                    "new_salary": new_salary
+                }
             )
 
-            connection.commit()
+            data = response.json()
 
-            if cursor.rowcount > 0:
+            if "message" in data:
 
-                st.success(
-                    "Salary updated successfully"
-                )
+                if data["message"] == "Employee not found":
 
-            else:
+                    st.warning(data["message"])
 
-                st.warning("Employee not found")
+                else:
+
+                    st.success(data["message"])
 
         except Exception as e:
 
             st.error(f"Error: {e}")
-
-        finally:
-
-            cursor.close()
-
-            connection.close()

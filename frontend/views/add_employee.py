@@ -1,13 +1,11 @@
 import streamlit as st
 
-from db import get_connection
+import requests
 
 
 def show_add_employee():
 
-    st.title("Employee Management System")
-
-    st.markdown("### Add New Employee")
+    st.title("Add Employee")
 
     st.markdown("---")
 
@@ -50,41 +48,32 @@ def show_add_employee():
         st.markdown("")
 
         if st.button("Add Employee"):
-
-            try:
-
-                connection = get_connection()
-
-                cursor = connection.cursor()
-
-                query = """
-                INSERT INTO employees
-                (employee_name, department, salary, email)
-
-                VALUES (%s, %s, %s, %s)
-                """
-
-                values = (
-                    name,
-                    department,
-                    salary,
-                    email
+            response = requests.post(
+                
+                "http://127.0.0.1:8000/employees",
+                
+                json={
+                    
+                    "employee_name": name,
+                    
+                    "department": department,
+                    
+                    "salary": salary,
+                    
+                    "email": email
+                    }
                 )
-
-                cursor.execute(query, values)
-
-                connection.commit()
+            
+            if response.status_code == 200:
 
                 st.success(
                     "Employee added successfully"
                 )
 
-            except Exception as e:
+            else:
+                st.error(
+                    "Failed to add employee"
+                )
 
-                st.error(f"Error: {e}")
+            
 
-            finally:
-
-                cursor.close()
-
-                connection.close()

@@ -1,6 +1,5 @@
 import streamlit as st
-
-from db import get_connection
+import requests
 
 
 def show_delete_employee():
@@ -17,35 +16,20 @@ def show_delete_employee():
 
         try:
 
-            connection = get_connection()
+            response = requests.delete(
+                f"http://127.0.0.1:8000/employees/{employee_id}"
+            )
 
-            cursor = connection.cursor()
+            data = response.json()
 
-            query = """
-            DELETE FROM employees
-            WHERE id = %s
-            """
+            if data["message"] == "Employee not found":
 
-            cursor.execute(query, (employee_id,))
-
-            connection.commit()
-
-            if cursor.rowcount > 0:
-
-                st.success(
-                    "Employee deleted successfully"
-                )
+                st.warning(data["message"])
 
             else:
 
-                st.warning("Employee not found")
+                st.success(data["message"])
 
         except Exception as e:
 
             st.error(f"Error: {e}")
-
-        finally:
-
-            cursor.close()
-
-            connection.close()

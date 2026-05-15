@@ -1,17 +1,19 @@
 import streamlit as st
 
 
+
 def sidebar_menu():
 
-    st.sidebar.image(
-        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-        width=90
-    )
-
-    st.sidebar.title("EMS Portal")
-
-    st.sidebar.caption(
-        "Employee Management Dashboard"
+    st.sidebar.markdown(
+        """
+        <div style='text-align:center;'>
+            <h1 style='color:white;'>EMS Portal</h1>
+            <p style='color:#94a3b8;'>
+                Enterprise HR Dashboard
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     st.sidebar.markdown("---")
@@ -25,14 +27,15 @@ def sidebar_menu():
             "Search Employee",
             "Update Salary",
             "Delete Employee",
-            "Sort Employees"
+            "Sort Employees",
+            "Export CSV"
         ]
     )
 
     st.sidebar.markdown("---")
 
-    st.sidebar.info(
-        "Built with Streamlit + PostgreSQL"
-    )
+    st.sidebar.success(
+        "System Status: Online"
+        )
 
     return menu

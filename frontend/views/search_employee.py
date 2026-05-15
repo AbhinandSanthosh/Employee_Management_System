@@ -1,6 +1,5 @@
 import streamlit as st
-
-from db import get_connection
+import requests
 
 
 def show_search_employee():
@@ -8,7 +7,7 @@ def show_search_employee():
     st.title("Search Employee")
 
     employee_id = st.number_input(
-        "Employee ID",
+        "Enter Employee ID",
         min_value=1,
         step=1
     )
@@ -17,39 +16,38 @@ def show_search_employee():
 
         try:
 
-            connection = get_connection()
+            response = requests.get(
+                f"http://127.0.0.1:8000/employees/{employee_id}"
+            )
 
-            cursor = connection.cursor()
+            data = response.json()
 
-            query = """
-            SELECT * FROM employees
-            WHERE id = %s
-            """
+            if "message" in data:
 
-            cursor.execute(query, (employee_id,))
-
-            employee = cursor.fetchone()
-
-            if employee:
-
-                st.success("Employee Found")
-
-                st.write(f"ID: {employee[0]}")
-                st.write(f"Name: {employee[1]}")
-                st.write(f"Department: {employee[2]}")
-                st.write(f"Salary: {employee[3]}")
-                st.write(f"Email: {employee[4]}")
+                st.warning(data["message"])
 
             else:
 
-                st.warning("Employee not found")
+                st.success("Employee Found")
+
+                st.write(f"ID: {data['id']}")
+
+                st.write(
+                    f"Name: {data['employee_name']}"
+                )
+
+                st.write(
+                    f"Department: {data['department']}"
+                )
+
+                st.write(
+                    f"Salary: {data['salary']}"
+                )
+
+                st.write(
+                    f"Email: {data['email']}"
+                )
 
         except Exception as e:
 
             st.error(f"Error: {e}")
-
-        finally:
-
-            cursor.close()
-
-            connection.close()

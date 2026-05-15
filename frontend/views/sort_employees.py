@@ -1,40 +1,42 @@
 import streamlit as st
 import pandas as pd
-
-from db import get_connection
+import requests
 
 
 def show_sort_employees():
 
-    st.title("Sort Employees")
+    st.title("Sort Employees By Salary")
 
     sort_order = st.radio(
-        "Sort Salary",
+        "Select Order",
         [
             "Ascending",
             "Descending"
         ]
     )
 
+    if sort_order == "Ascending":
+
+        order = "asc"
+
+    else:
+
+        order = "desc"
+
     try:
 
-        connection = get_connection()
+        response = requests.get(
 
-        if sort_order == "Ascending":
+            "http://127.0.0.1:8000/employees/sort",
 
-            query = """
-            SELECT * FROM employees
-            ORDER BY salary ASC
-            """
+            params={
+                "order": order
+            }
+        )
 
-        else:
+        data = response.json()
 
-            query = """
-            SELECT * FROM employees
-            ORDER BY salary DESC
-            """
-
-        df = pd.read_sql(query, connection)
+        df = pd.DataFrame(data)
 
         st.dataframe(
             df,
@@ -44,7 +46,3 @@ def show_sort_employees():
     except Exception as e:
 
         st.error(f"Error: {e}")
-
-    finally:
-
-        connection.close()
