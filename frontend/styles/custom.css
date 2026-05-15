@@ -61,24 +61,6 @@ section[data-testid="stSidebar"] {
     );
 }
 
-    border-radius: 12px;
-
-    height: 3em;
-
-    font-weight: 600;
-
-    transition: 0.3s;
-}
-
-
-.stButton > button:hover {
-
-    background: linear-gradient(
-        90deg,
-        #1d4ed8,
-        #1e40af
-    );
-}
 
 /* METRIC CARDS */
 

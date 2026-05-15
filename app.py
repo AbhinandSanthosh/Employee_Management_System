@@ -1,9 +1,9 @@
 import streamlit as st
 
-from components.sidebar import sidebar_menu
+from frontend.components.sidebar import sidebar_menu
 
-from views.dashboard import show_dashboard
-from view.add_employee import show_add_employee
+from frontend.views.dashboard import show_dashboard
+from frontend.views.add_employee import show_add_employee
 
 
 st.set_page_config(
