@@ -63,7 +63,7 @@ def create_access_token(
 
     return encoded_jwt
 
-def verify_token(
+def get_current_user(
     token: str = Depends(oauth2_scheme)
 ):
 
@@ -92,3 +92,17 @@ def verify_token(
             status_code=401,
             detail="Invalid token"
         )
+    
+def admin_only(
+
+    current_user: str = Depends(get_current_user)
+):
+
+    if current_user != "admin":
+
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access required"
+        )
+
+    return current_user

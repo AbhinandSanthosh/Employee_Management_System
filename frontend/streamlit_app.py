@@ -14,6 +14,10 @@ from frontend.views.export_csv import show_export_csv
 from frontend.views.login import show_login
 from frontend.views.login import logout
 
+from frontend.views.websocket_test import (
+    show_websocket_test
+)
+
 st.set_page_config(
     page_title="Employee Management System",
     page_icon="💼",
@@ -92,3 +96,7 @@ elif menu == "Sort Employees":
 elif menu == "Export CSV":
 
     show_export_csv()
+
+elif menu == "WebSocket Test":
+
+    show_websocket_test()

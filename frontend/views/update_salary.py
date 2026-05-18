@@ -18,30 +18,36 @@ def show_update_salary():
     )
 
     if st.button("Update Salary"):
-
-        try:
-
-            response = requests.put(
-
-                f"http://127.0.0.1:8000/employees/{employee_id}",
-
-                params={
-                    "new_salary": new_salary
-                }
-            )
-
-            data = response.json()
-
-            if "message" in data:
-
-                if data["message"] == "Employee not found":
+         
+         try:
+              headers = {
+                   
+                   "Authorization":
+                   f"Bearer {st.session_state['token']}"
+                   }
+              
+              response = requests.put(
+                   
+                   f"http://127.0.0.1:8000/employees/{employee_id}",
+                   
+                   params={
+                        "new_salary": new_salary
+                        },
+                        
+                        headers=headers
+                        )
+              
+              data = response.json()
+              
+              if "message" in data:
+                   if data["message"] == "Employee not found":
 
                     st.warning(data["message"])
 
-                else:
+              else:
 
                     st.success(data["message"])
 
-        except Exception as e:
+         except Exception as e:
 
             st.error(f"Error: {e}")

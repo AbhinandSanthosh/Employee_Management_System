@@ -16,8 +16,17 @@ def show_delete_employee():
 
         try:
 
+            headers = {
+
+                "Authorization":
+                f"Bearer {st.session_state['token']}"
+            }
+
             response = requests.delete(
-                f"http://127.0.0.1:8000/employees/{employee_id}"
+
+                f"http://127.0.0.1:8000/employees/{employee_id}",
+
+                headers=headers
             )
 
             data = response.json()

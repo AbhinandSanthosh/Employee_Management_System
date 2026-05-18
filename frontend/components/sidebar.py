@@ -28,7 +28,8 @@ def sidebar_menu():
             "Update Salary",
             "Delete Employee",
             "Sort Employees",
-            "Export CSV"
+            "Export CSV",
+            "WebSocket Test"
         ]
     )
 

@@ -18,10 +18,19 @@ def show_dashboard():
         "http://127.0.0.1:8000/employees",
         headers=headers
     )
+    if response.status_code == 200:
+        
+        data = response.json()
+        
+        df = pd.DataFrame(data)
 
-    data = response.json()
+    else:
 
-    df = pd.DataFrame(data)
+        st.error(
+            f"API Error: {response.status_code}"
+        )
+
+        st.stop()
 
     total_employees = len(df)
 
